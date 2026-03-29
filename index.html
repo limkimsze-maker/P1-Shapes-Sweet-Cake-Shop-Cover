@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+  />
+  <title>P1 Shapes: Sweet Cake Shop!</title>
+
+  <link rel="preload" as="image" href="P1 Shapes  Sweet Cake Shop!.png" fetchpriority="high" />
+
+  <style>
+    :root{
+      --text:#fff8fb;
+      --text-soft:#fff1c7;
+      --brown:#7b3d22;
+      --brown-deep:#5e2d17;
+      --pink1:#ff9fbe;
+      --pink2:#ff6f9d;
+      --cream1:#ffe9a8;
+      --cream2:#ffc76d;
+      --glass:rgba(255,255,255,0.14);
+      --glass-stroke:rgba(255,255,255,0.24);
+      --shadow:0 18px 42px rgba(60, 26, 18, 0.28);
+    }
+
+    *{ box-sizing:border-box; }
+
+    html, body{
+      margin:0;
+      width:100%;
+      min-height:100%;
+      overflow:hidden;
+      font-family:"Arial Rounded MT Bold","Trebuchet MS","Comic Sans MS",sans-serif;
+      background:linear-gradient(180deg, #ffd5e4 0%, #ffc1d6 35%, #ffb5a6 100%);
+    }
+
+    body{
+      min-height:100vh;
+      min-height:100dvh;
+    }
+
+    .page{
+      position:relative;
+      min-height:100vh;
+      min-height:100dvh;
+      display:grid;
+      place-items:center;
+      padding:
+        max(12px, env(safe-area-inset-top))
+        max(12px, env(safe-area-inset-right))
+        max(12px, env(safe-area-inset-bottom))
+        max(12px, env(safe-area-inset-left));
+      overflow:hidden;
+      isolation:isolate;
+    }
+
+    .bg{
+      position:absolute;
+      inset:0;
+      background-image:url("P1 Shapes  Sweet Cake Shop!.png");
+      background-size:cover;
+      background-position:center;
+      filter:blur(26px) saturate(1.1) brightness(1.02);
+      transform:scale(1.12);
+      opacity:.45;
+      z-index:-3;
+    }
+
+    .bg-overlay{
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,.30), transparent 32%),
+        linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,173,194,.12)),
+        linear-gradient(180deg, rgba(255,226,196,.18), rgba(255,180,156,.22));
+      z-index:-2;
+    }
+
+    .sprinkles{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index:-1;
+    }
+
+    .sprinkles span{
+      position:absolute;
+      width:12px;
+      height:12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.9);
+      box-shadow:0 0 18px rgba(255,255,255,.9);
+      animation:floaty 3.2s ease-in-out infinite;
+    }
+
+    .sprinkles span:nth-child(1){ top:9%; left:8%; animation-delay:.2s; }
+    .sprinkles span:nth-child(2){ top:12%; right:10%; animation-delay:1s; }
+    .sprinkles span:nth-child(3){ top:24%; left:84%; animation-delay:1.9s; }
+    .sprinkles span:nth-child(4){ top:70%; left:9%; animation-delay:1.3s; }
+    .sprinkles span:nth-child(5){ top:82%; right:11%; animation-delay:.7s; }
+    .sprinkles span:nth-child(6){ top:56%; right:17%; animation-delay:2.2s; }
+
+    @keyframes floaty{
+      0%,100%{ transform:translateY(0) scale(.7); opacity:.55; }
+      50%{ transform:translateY(-6px) scale(1.12); opacity:1; }
+    }
+
+    .panel{
+      width:min(100%, 760px);
+      min-height:min(96dvh, 920px);
+      display:grid;
+      grid-template-rows:auto auto 1fr auto auto auto;
+      gap:14px;
+      position:relative;
+      overflow:hidden;
+      border-radius:30px;
+      padding:18px 18px max(16px, calc(env(safe-area-inset-bottom) + 8px));
+      background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.10));
+      border:1px solid var(--glass-stroke);
+      backdrop-filter:blur(12px);
+      box-shadow:var(--shadow);
+    }
+
+    .panel::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 8%, rgba(255,255,255,.24), transparent 26%),
+        linear-gradient(180deg, rgba(255,255,255,.10), transparent 32%);
+    }
+
+    .top-hint{
+      position:relative;
+      z-index:1;
+      margin:2px auto 0;
+      width:max-content;
+      max-width:100%;
+      padding:10px 16px;
+      border-radius:999px;
+      background:rgba(122, 62, 34, .48);
+      color:#fff6c8;
+      text-align:center;
+      font-size:clamp(12px, 2vw, 15px);
+      font-weight:900;
+      box-shadow:
+        0 6px 16px rgba(73, 32, 18, .18),
+        0 0 0 1px rgba(255,255,255,.14) inset;
+      backdrop-filter:blur(6px);
+    }
+
+    .title-wrap{
+      position:relative;
+      z-index:1;
+      text-align:center;
+      display:grid;
+      gap:10px;
+      padding:14px 16px;
+      margin:0 6px;
+      border-radius:24px;
+      background:linear-gradient(180deg, rgba(122, 62, 34, .34), rgba(122, 62, 34, .18));
+      box-shadow:
+        0 12px 26px rgba(70, 30, 20, .16),
+        inset 0 0 0 1px rgba(255,255,255,.12);
+      backdrop-filter:blur(8px);
+    }
+
+    .eyebrow{
+      font-size:clamp(13px, 2.2vw, 16px);
+      color:#ffe88d;
+      font-weight:900;
+      letter-spacing:.8px;
+      text-transform:uppercase;
+      text-shadow:
+        0 2px 0 rgba(92, 42, 20, .45),
+        0 4px 10px rgba(0,0,0,.18);
+    }
+
+    h1{
+      margin:0;
+      color:#fffdfb;
+      font-size:clamp(30px, 5.8vw, 58px);
+      line-height:.95;
+      text-shadow:
+        0 3px 0 rgba(122, 56, 34, .32),
+        0 10px 22px rgba(0,0,0,.18);
+    }
+
+    .sub{
+      margin:0 auto;
+      max-width:28ch;
+      color:#fff8ef;
+      font-size:clamp(16px, 2.5vw, 22px);
+      line-height:1.25;
+      font-weight:800;
+      text-shadow:
+        0 2px 0 rgba(92, 42, 20, .30),
+        0 6px 14px rgba(0,0,0,.14);
+    }
+
+    .art-wrap{
+      position:relative;
+      z-index:1;
+      display:grid;
+      place-items:center;
+      min-height:0;
+      padding:4px 4px 0;
+    }
+
+    .art-frame{
+      position:relative;
+      width:100%;
+      height:100%;
+      min-height:320px;
+      max-height:min(58dvh, 620px);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      border-radius:26px;
+      background:linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.09));
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.20),
+        0 12px 30px rgba(0,0,0,.14);
+    }
+
+    .art-frame::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index:1;
+      background:
+        radial-gradient(circle at 50% 10%, rgba(255,255,255,.24), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,.08), transparent 35%);
+    }
+
+    .art-bg{
+      position:absolute;
+      inset:0;
+      background-image:url("P1 Shapes  Sweet Cake Shop!.png");
+      background-size:cover;
+      background-position:center;
+      filter:blur(20px) brightness(.98);
+      transform:scale(1.06);
+      opacity:.34;
+    }
+
+    .art{
+      position:relative;
+      z-index:2;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+      padding:10px;
+      filter:drop-shadow(0 10px 18px rgba(0,0,0,.18));
+    }
+
+    .feature-row{
+      position:relative;
+      z-index:1;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:10px;
+      padding:0 6px;
+    }
+
+    .pill{
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.17);
+      color:#fff;
+      font-size:clamp(12px, 2vw, 15px);
+      font-weight:800;
+      box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
+    }
+
+    .buttons{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:-6px;
+    }
+
+    .btn{
+      appearance:none;
+      border:none;
+      border-radius:18px;
+      min-height:56px;
+      padding:10px 12px;
+      cursor:pointer;
+      font-family:inherit;
+      font-weight:900;
+      font-size:clamp(16px, 2.2vw, 20px);
+      line-height:1.08;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      text-align:center;
+      transition:transform .12s ease, filter .12s ease, box-shadow .12s ease, opacity .16s ease;
+      box-shadow:
+        0 8px 0 rgba(0,0,0,.14),
+        0 12px 20px rgba(0,0,0,.16),
+        inset 0 2px 0 rgba(255,255,255,.45);
+    }
+
+    .btn:hover{
+      transform:translateY(-2px) scale(1.01);
+      filter:brightness(1.03);
+    }
+
+    .btn:active{
+      transform:translateY(5px) scale(.995);
+      box-shadow:
+        0 5px 0 rgba(0,0,0,.14),
+        0 10px 16px rgba(0,0,0,.14),
+        inset 0 2px 0 rgba(255,255,255,.40);
+    }
+
+    .btn[disabled]{
+      cursor:default;
+      opacity:.78;
+      transform:none;
+      filter:none;
+    }
+
+    .desktop{
+      background:linear-gradient(180deg, var(--cream1), var(--cream2));
+      color:var(--brown-deep);
+      text-shadow:0 1px 0 rgba(255,255,255,.35);
+    }
+
+    .mobile{
+      background:linear-gradient(180deg, var(--pink1), var(--pink2));
+      color:#fffaf8;
+      text-shadow:0 1px 0 rgba(104,25,56,.18);
+    }
+
+    .status{
+      position:relative;
+      z-index:1;
+      min-height:22px;
+      text-align:center;
+      color:#fff4c8;
+      font-size:clamp(13px, 2vw, 16px);
+      font-weight:800;
+      text-shadow:0 1px 0 rgba(0,0,0,.18);
+      opacity:0;
+      transition:opacity .2s ease;
+    }
+
+    .status.show{
+      opacity:1;
+    }
+
+    .credit{
+      position:relative;
+      z-index:1;
+      text-align:center;
+      font-size:12px;
+      color:rgba(255,255,255,.95);
+      text-shadow:0 1px 2px rgba(0,0,0,.22);
+    }
+
+    @media (max-width: 700px){
+      .panel{
+        width:min(100%, 560px);
+        border-radius:24px;
+        padding:14px 14px max(14px, calc(env(safe-area-inset-bottom) + 6px));
+        gap:12px;
+      }
+
+      .title-wrap{
+        padding:12px 12px;
+        border-radius:20px;
+      }
+
+      .art-frame{
+        border-radius:20px;
+        min-height:220px;
+        max-height:min(38dvh, 320px);
+      }
+
+      .buttons{
+        gap:8px;
+        margin-top:-10px;
+      }
+
+      .btn{
+        min-height:50px;
+        padding:8px 10px;
+        border-radius:16px;
+        font-size:15px;
+      }
+    }
+
+    @media (max-width: 560px){
+      .buttons{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-height: 760px){
+      .panel{
+        gap:10px;
+      }
+
+      .art-frame{
+        max-height:min(42dvh, 360px);
+      }
+
+      .btn{
+        min-height:52px;
+      }
+    }
+
+    @media (max-height: 620px){
+      .panel{
+        min-height:min(98dvh, 620px);
+      }
+
+      .title-wrap{
+        padding:10px 12px;
+      }
+
+      h1{
+        font-size:clamp(26px, 5.2vw, 44px);
+      }
+
+      .sub{
+        font-size:clamp(14px, 2.2vw, 18px);
+      }
+
+      .top-hint,
+      .pill,
+      .status{
+        font-size:12px;
+      }
+
+      .art-frame{
+        min-height:190px;
+        max-height:min(30dvh, 240px);
+      }
+
+      .btn{
+        min-height:46px;
+        font-size:15px;
+        padding:7px 9px;
+      }
+
+      .credit{
+        font-size:11px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="bg"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="sprinkles" aria-hidden="true">
+      <span></span><span></span><span></span>
+      <span></span><span></span><span></span>
+    </div>
+
+    <main class="panel">
+      <div class="top-hint">Choose your version and start the shapes game</div>
+
+      <section class="title-wrap">
+        <div class="eyebrow">Fun Shapes Learning with Cakes and Cute Friends</div>
+        <h1>P1 Shapes: Sweet Cake Shop!</h1>
+        <p class="sub">Learn shapes in a cheerful cake shop adventure.</p>
+      </section>
+
+      <section class="art-wrap">
+        <div class="art-frame" aria-label="Sweet Cake Shop cover image">
+          <div class="art-bg"></div>
+          <img
+            class="art"
+            src="P1 Shapes  Sweet Cake Shop!.png"
+            alt="P1 Shapes Sweet Cake Shop cover image"
+          />
+        </div>
+      </section>
+
+      <section class="feature-row">
+        <div class="pill">🍰 Learn basic shapes</div>
+        <div class="pill">📱 Mobile friendly</div>
+        <div class="pill">🖥️ Desktop ready</div>
+      </section>
+
+      <section class="buttons">
+        <button class="btn desktop" id="desktopBtn" type="button" aria-label="Open Desktop Game">
+          <span>🖥️</span>
+          <span>Desktop</span>
+        </button>
+
+        <button class="btn mobile" id="mobileBtn" type="button" aria-label="Open Mobile Game">
+          <span>📱</span>
+          <span>Mobile</span>
+        </button>
+      </section>
+
+      <div class="status" id="statusText" aria-live="polite"></div>
+      <div class="credit">Designed by Lim Kim Sze © 2026</div>
+    </main>
+  </div>
+
+  <audio id="openingAudio" preload="auto" playsinline></audio>
+
+  <script>
+    const DESKTOP_LINK = "https://limkimsze-maker.github.io/P1-Shapes-Cake-Shop-Desktop/";
+    const MOBILE_LINK = "https://limkimsze-maker.github.io/P1-Shapes-Cake-Shop-Mobile/";
+    const OPENING_SOUND = "cakeopening.wav";
+
+    const desktopBtn = document.getElementById("desktopBtn");
+    const mobileBtn = document.getElementById("mobileBtn");
+    const statusText = document.getElementById("statusText");
+    const openingAudio = document.getElementById("openingAudio");
+
+    let opening = false;
+
+    if (OPENING_SOUND.trim()) {
+      openingAudio.src = OPENING_SOUND;
+      openingAudio.load();
+    }
+
+    function showStatus(message) {
+      statusText.textContent = message;
+      statusText.classList.add("show");
+    }
+
+    function disableButtons() {
+      desktopBtn.disabled = true;
+      mobileBtn.disabled = true;
+    }
+
+    function goTo(link) {
+      window.location.href = link;
+    }
+
+    function startGame(link, label) {
+      if (opening) return;
+      opening = true;
+
+      disableButtons();
+      showStatus("Opening " + label + "...");
+
+      if (!OPENING_SOUND.trim()) {
+        setTimeout(() => goTo(link), 180);
+        return;
+      }
+
+      openingAudio.pause();
+      openingAudio.currentTime = 0;
+
+      openingAudio.addEventListener("ended", () => {
+        goTo(link);
+      }, { once:true });
+
+      openingAudio.play().catch(() => {
+        goTo(link);
+      });
+    }
+
+    desktopBtn.addEventListener("click", () => {
+      startGame(DESKTOP_LINK, "Sweet Cake Shop Desktop");
+    });
+
+    mobileBtn.addEventListener("click", () => {
+      startGame(MOBILE_LINK, "Sweet Cake Shop Mobile");
+    });
+  </script>
+</body>
+</html>
